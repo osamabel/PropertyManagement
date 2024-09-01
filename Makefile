@@ -1,3 +1,4 @@
 start:
+	node ./back/server.js &
 	npm start --prefix ./front
-	npm start --prefix ./back
+	
