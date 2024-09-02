@@ -7,6 +7,7 @@ const tenantRoutes = require('./routes/tenants');
 const paymentRoutes = require('./routes/payments');
 const loginRoutes = require('./routes/login');
 const signupRoutes = require('./routes/signup');
+require('dotenv').config();
 
 // Enable CORS and JSON parsing
 app.use(cors({
@@ -19,8 +20,9 @@ app.use(express.json());
 app.use('/signup', signupRoutes);
 app.use('/login', loginRoutes);
 app.use('/properties', propertyRoutes);
-app.use('/tenants', tenantRoutes);
+app.use('/', tenantRoutes);
 app.use('/payments', paymentRoutes);
+
 
 // Default route
 app.get('/', (req, res) => {

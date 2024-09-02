@@ -4,6 +4,8 @@ const prisma = new PrismaClient();
 const authenticateToken = require('../middleware/auth');
 const router = express.Router();
 
+
+
 router.use(authenticateToken);
 
 router.post('/', async (req, res) => {
@@ -19,11 +21,23 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/', async (res) => {
-  console.log(">>>>>")
-  const properties = await prisma.property.findMany();
-  res.json(properties);
+router.get('/', async (req, res) => {
+  try {
+    const properties = await prisma.property.findMany({
+      include: {
+        tenants: {
+          include: {
+            payments: true,
+          },
+        },
+      },
+    });
+    res.json(properties);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching properties.' });
+  }
 });
+
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;

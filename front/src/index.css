@@ -7,3 +7,7 @@ body{
     background-color: black;
     color: white;
 }
+
+.t-500{
+    transition: all 500ms;
+}

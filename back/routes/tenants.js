@@ -6,13 +6,19 @@ const router = express.Router();
 
 router.use(authenticateToken);
 
-router.post('/properties/:propertyId/tenants', async (req, res) => {
+// Create a new tenant for a specific property
+router.post('/:propertyId/tenants', async (req, res) => {
   const { propertyId } = req.params;
-  const { name, contactDetails, section } = req.body;
-
+  const { name, email, phone, section } = req.body;
   try {
     const tenant = await prisma.tenant.create({
-      data: { name, contactDetails, section, propertyId: parseInt(propertyId) },
+      data: { 
+        name, 
+        email,
+        phone,
+        section, 
+        propertyId: parseInt(propertyId) 
+      },
     });
     res.status(201).json(tenant);
   } catch (err) {
@@ -20,22 +26,28 @@ router.post('/properties/:propertyId/tenants', async (req, res) => {
   }
 });
 
+// Get all tenants for a specific property
 router.get('/properties/:propertyId/tenants', async (req, res) => {
   const { propertyId } = req.params;
-  const tenants = await prisma.tenant.findMany({
-    where: { propertyId: parseInt(propertyId) },
-  });
-  res.json(tenants);
+  try {
+    const tenants = await prisma.tenant.findMany({
+      where: { propertyId: parseInt(propertyId) },
+    });
+    res.json(tenants);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
+// Update a tenant's details
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, contactDetails, section } = req.body;
+  const { name, email, phone, section } = req.body;
 
   try {
     const tenant = await prisma.tenant.update({
       where: { id: parseInt(id) },
-      data: { name, contactDetails, section },
+      data: { name, email, phone, section },
     });
     res.json(tenant);
   } catch (err) {
@@ -43,6 +55,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Delete a tenant
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 

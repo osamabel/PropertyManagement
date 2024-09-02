@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import React, { useContext } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useContext(AuthContext);
@@ -14,8 +14,7 @@ const PrivateRoute = ({ children }) => {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  return <Outlet />;  // Ensure that child routes are rendered
-
+  return <Outlet />; // Ensure that child routes are rendered
 };
 
 export default PrivateRoute;
