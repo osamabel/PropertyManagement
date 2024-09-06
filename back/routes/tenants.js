@@ -6,38 +6,20 @@ const router = express.Router();
 
 router.use(authenticateToken);
 
-// Create a new tenant for a specific property
-router.post('/:propertyId/tenants', async (req, res) => {
-  const { propertyId } = req.params;
-  const { name, email, phone, section } = req.body;
+router.get('/', async (req, res) => {
   try {
-    const tenant = await prisma.tenant.create({
-      data: { 
-        name, 
-        email,
-        phone,
-        section, 
-        propertyId: parseInt(propertyId) 
+    const tenant = await prisma.tenant.findMany({
+      include: {
+        payments: true,
       },
     });
-    res.status(201).json(tenant);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.log('Fetched tenants:', tenant);
+    res.json(tenant);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching tenant.' });
   }
 });
 
-// Get all tenants for a specific property
-router.get('/properties/:propertyId/tenants', async (req, res) => {
-  const { propertyId } = req.params;
-  try {
-    const tenants = await prisma.tenant.findMany({
-      where: { propertyId: parseInt(propertyId) },
-    });
-    res.json(tenants);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
 
 // Update a tenant's details
 router.put('/:id', async (req, res) => {

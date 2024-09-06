@@ -20,7 +20,7 @@ app.use(express.json());
 app.use('/signup', signupRoutes);
 app.use('/login', loginRoutes);
 app.use('/properties', propertyRoutes);
-app.use('/', tenantRoutes);
+app.use('/tenants', tenantRoutes);
 app.use('/payments', paymentRoutes);
 
 

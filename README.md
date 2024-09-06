@@ -16,7 +16,7 @@
 Link : https://www.figma.com/design/qLchT4sGBRtJ5lDCzxAKqt/Untitled?node-id=0-1&t=iQW1ewcHbISuuB8F-1
 
 
-## i pushed ENV 😉 
+## i pushed Teh .ENV 😉 
 `.env`
 
 ## Front End
@@ -27,4 +27,8 @@ run on `Poor:3000`
 run on `Poor:3001`
 
 ## Run project
+git clone https://github.com/osamabel/PropertyManagement
+cd PropertyManagement
+chmod +x run.sh
+
 bach run.sh

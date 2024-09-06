@@ -25,25 +25,26 @@ model Property {
   updated_at DateTime @updatedAt
 }
 
-model Tenant {
-  id          Int      @id @default(autoincrement())
-  name        String
-  email       String
-  phone       String
-  section     Int
-  property    Property @relation(fields: [propertyId], references: [id])
-  propertyId  Int
-  payments    Payment[]
-}
+  model Tenant {
+    id          Int      @id @default(autoincrement())
+    name        String
+    email       String  @unique
+    phone       String
+    section     Int     @unique
+    property    Property @relation(fields: [propertyId], references: [id])
+    propertyId  Int
+    payments    Payment[]
+  }
 
-model Payment {
-  id        Int      @id @default(autoincrement())
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
-  tenantId  Int
-  datePaid  DateTime
-  amount    Float
-  settled   Boolean
-}
+  model Payment {
+    id        Int      @id @default(autoincrement())
+    tenant    Tenant   @relation(fields: [tenantId], references: [id])
+    tenantId  Int
+    monthName String 
+    datePaid  DateTime?
+    updated_at DateTime @updatedAt
+    settled   Boolean
+  }
 
 model User {
   id       Int    @id @default(autoincrement())

@@ -11,9 +11,11 @@ router.use(authenticateToken);
 router.post('/', async (req, res) => {
   const { name, address, type, units, rentalCost } = req.body;
 
+console.log(">>>>", req.body)
+
   try {
     const property = await prisma.property.create({
-      data: { name, address, type, units, rentalCost },
+      data: { name, address, type, units: parseInt(units), rentalCost:parseInt(rentalCost) },
     });
     res.status(201).json(property);
   } catch (err) {
@@ -70,6 +72,57 @@ router.delete('/:id', async (req, res) => {
   try {
     await prisma.property.delete({ where: { id: parseInt(id) } });
     res.status(204).end();
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+
+router.post('/:propertyId/tenants', async (req, res) => {
+  const { propertyId } = req.params
+  const { name, email, phone, section } = req.body;
+
+  const getCurrentMonthName = () => {
+    const date = new Date();
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June', 
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return monthNames[date.getMonth()];
+  };
+  console.log('getCurrentMonthName:', getCurrentMonthName());
+  
+  try {
+    const tenant = await prisma.tenant.create({
+      data: { 
+        name, 
+        email,
+        phone,
+        section : parseInt(section),
+        propertyId: parseInt(propertyId),
+        payments: {
+          create: {
+            monthName: getCurrentMonthName(),
+            datePaid: null,
+            settled: false,
+          },
+        },
+      },
+    });
+    res.status(201).json(tenant);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+
+router.get('/:propertyId/tenants', async (req, res) => {
+  const { propertyId } = req.params;
+  try {
+    const tenants = await prisma.tenant.findMany({
+      where: { propertyId: parseInt(propertyId) },
+    });
+    res.json(tenants);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
